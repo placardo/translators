@@ -2,14 +2,14 @@
 	"translatorID": "951c027d-74ac-47d4-a107-9c3069ab7b48",
 	"label": "Cowles",
 	"creator": "Vincent Carret",
-	"target": "https?://(www\\\\.)?cowles.yale.edu/",
+	"target": "^https?://(www\\.)?cowles.yale.edu/",
 	"minVersion": "3.0.4",
 	"maxVersion": "",
 	"priority": 320,
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-20 22:50:24"
+	"lastUpdated": "2019-11-21 10:52:31"
 }
 
 /*
@@ -173,3 +173,88 @@ function scrape(doc, url){
 }
 
 
+/** BEGIN TEST CASES **/
+var testCases = [
+	{
+		"type": "web",
+		"url": "https://cowles.yale.edu/author/herbert-e-scarf",
+		"items": "multiple"
+	},
+	{
+		"type": "web",
+		"url": "https://cowles.yale.edu/publications/cfp/cfp1573",
+		"items": [
+			{
+				"itemType": "journalArticle",
+				"title": "How to Compute Equilibrium Prices in 1891",
+				"creators": [
+					{
+						"firstName": "William C.",
+						"lastName": "Brainard",
+						"creatorType": "author"
+					},
+					{
+						"firstName": "Herbert E.",
+						"lastName": "Scarf",
+						"creatorType": "author"
+					}
+				],
+				"date": "January, 2005",
+				"extra": "See also: CFDP 1272",
+				"issue": "1",
+				"libraryCatalog": "Cowles Foundation",
+				"pages": "57–83",
+				"publicationTitle": "American Journal of Economics and Sociology",
+				"url": "http://onlinelibrary.wiley.com/doi/10.1111/j.1536-7150.2005.00349.x/full",
+				"volume": "64",
+				"attachments": [],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://cowles.yale.edu/publications/cfdp/cfdp-1415",
+		"items": [
+			{
+				"itemType": "report",
+				"title": "Two New Proofs of Afriat's Theorem",
+				"creators": [
+					{
+						"firstName": "Ana",
+						"lastName": "Fostel",
+						"creatorType": "author"
+					},
+					{
+						"firstName": "Herbert E.",
+						"lastName": "Scarf",
+						"creatorType": "author"
+					},
+					{
+						"firstName": "Michael J.",
+						"lastName": "Todd",
+						"creatorType": "author"
+					}
+				],
+				"date": "May 2003",
+				"abstractNote": "We provide two new, simple proofs of Afriat’s celebrated theorem stating that a ﬁnite set of price-quantity observations is consistent with utility maximization if, and only if, the observations satisfy a variation of the Strong Axiom of Revealed Preference known as the Generalized Axiom of Revealed Preference.",
+				"libraryCatalog": "Cowles Foundation",
+				"pages": "10",
+				"reportNumber": "1415",
+				"reportType": "Cowles Foundation Discussion Paper",
+				"attachments": [
+					{
+						"title": "Two New Proofs of Afriat's Theorem",
+						"mimeType": "application/pdf"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	}
+]
+/** END TEST CASES **/
