@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 12:11:56"
+	"lastUpdated": "2019-11-21 12:23:10"
 }
 
 /*
@@ -118,7 +118,10 @@ function scrape(doc, url){
 		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
 		item.url = doc.evaluate("//strong[contains(., 'CFP Paper Title')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.getAttribute('href');
 		item.libraryCatalog = "Cowles Foundation";
-		item.extra = "See also: " + doc.evaluate("//strong[contains(., 'See CFDP')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
+		try {
+			item.extra = "See also: " + doc.evaluate("//strong[contains(., 'See CFDP')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
+		}
+		catch (err) {}
 	}
 	else if (url.includes('/cfdp/')) {
 		item = new Zotero.Item("report");
@@ -131,7 +134,10 @@ function scrape(doc, url){
 		item.libraryCatalog = "Cowles Foundation";
 		item.date = doc.evaluate("//strong[contains(., 'Publication Date')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		item.pages = doc.evaluate("//strong[contains(., 'Pages')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
-		item.abstractNote = doc.evaluate("//strong[contains(., 'Abstract')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().parentElement.nextSibling.textContent;
+		try {
+			item.abstractNote = doc.evaluate("//strong[contains(., 'Abstract')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().parentElement.nextSibling.textContent;
+		}
+		catch (err) {}
 		pdfurl = doc.querySelector('h3 a').getAttribute('href');
 		item.attachments.push({
 			title: item.title,
@@ -164,7 +170,7 @@ function scrape(doc, url){
 		else if (author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false));
 		else item.creators.push(ZU.cleanAuthor(author[0],status,false));
 		
-		try{
+		try {
 			var editor = doc.querySelector(".field-name-field-paper-title p a").nextSibling.textContent.trim().split(", ");
 			if (editor[1].search("ed.") != -1) {
 				item.edition = editor[1];
@@ -173,8 +179,7 @@ function scrape(doc, url){
 			else item.publisher = editor[1];
 			item.date = editor[editor.length-1].split(" ")[0];
 		}
-		catch (err) {
-		}
+		catch (err) {}
 		
 		pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
 		item.attachments.push({
