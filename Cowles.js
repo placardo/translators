@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 11:58:59"
+	"lastUpdated": "2019-11-21 12:11:56"
 }
 
 /*
@@ -38,7 +38,7 @@
 
 function detectWeb(doc, url) {
 	// TODO: adjust the logic here
-	if(url.includes('/cfp/')){
+	if (url.includes('/cfp/')) {
 		return "journalArticle";
 	}
 	else if (url.includes('/cfdp/')) {
@@ -61,18 +61,23 @@ function getSearchResults(doc, checkOnly) {
 	var href = "";
 	var title = "";
 	for (let row of rows) {
-		var paper = row.querySelector("td").textContent.trim().toLowerCase().replace(".","").split(" ");
+		var paper = row.querySelector("td")
+		.textContent
+		.trim()
+		.toLowerCase()
+		.replace(".", "")
+		.split(" ");
 		// There are three types of documents: monographs (books), discussion papers (reports) and papers which were published
 		// This query method works on the monograph pages and the authors' pages for now
-		if(paper[0] == "cfm"){
+		if (paper[0] == "cfm") {
 			href = root + "/" + paper.join("-");
 			title = row.querySelector("td.views-field-field-paper-title a").textContent;
 		}
-		else if(paper[0] == "cfdp"){
+		else if (paper[0] == "cfdp") {
 			href = root + "/publications/" + paper[0] + "/" + paper.join("-");
 			title = row.querySelector("td.views-field-field-author-from-list strong a").textContent;
 		}
-		else if(paper[0] == "cfp"){
+		else if (paper[0] == "cfp") {
 			href = root + "/publications/" + paper[0] + "/" + paper.join("");
 			title = row.querySelector("td.views-field-field-author-from-list strong a").textContent;
 		}
@@ -98,8 +103,8 @@ function doWeb(doc, url) {
 
 function scrape(doc, url){
 	var root = "https://cowles.yale.edu";
-	var pdfurl = ""
-	var item = null
+	var pdfurl = "";
+	var item = null;
 	// Each type of document follow a different layout, which seems to be the same inside all three categories
 	if (url.includes('/cfp/')) {
 		item = new Zotero.Item("journalArticle");
@@ -110,18 +115,18 @@ function scrape(doc, url){
 		item.issue = doc.evaluate("//strong[contains(., 'CFP Vol(Issue)')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent.split('(')[1][0];
 		item.pages = doc.evaluate("//strong[contains(., 'CFP page numbers')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		author = doc.querySelectorAll("div.comma span.comma a");
-		for(let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
+		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
 		item.url = doc.evaluate("//strong[contains(., 'CFP Paper Title')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.getAttribute('href');
 		item.libraryCatalog = "Cowles Foundation";
 		item.extra = "See also: " + doc.evaluate("//strong[contains(., 'See CFDP')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 	}
-	else if(url.includes('/cfdp/')) {
+	else if (url.includes('/cfdp/')) {
 		item = new Zotero.Item("report");
 		item.title = doc.querySelector('h3 a').textContent;
 		item.reportType = "Cowles Foundation Discussion Paper";
 		item.reportNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
 		author = doc.querySelectorAll("div.comma span.comma a");
-		for(let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
+		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
 
 		item.libraryCatalog = "Cowles Foundation";
 		item.date = doc.evaluate("//strong[contains(., 'Publication Date')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
@@ -147,28 +152,28 @@ function scrape(doc, url){
 		.textContent
 		.trim()
 		.split(",");
-		if(author[1] == " ed." || author[1] == " eds.") status = "editor";
+		if (author[1] == " ed." || author[1] == " eds.") status = "editor";
 		else status = "author";
 		
-		if(author[0].search(" and ") != -1){
+		if (author[0].search(" and ") != -1) {
 			var authors = author[0].split(" and ");
-			for(let auth of authors){
+			for (let auth of authors){
 				item.creators.push(ZU.cleanAuthor(auth,status,false));
 			}
 		}
-		else if(author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false));
+		else if (author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false));
 		else item.creators.push(ZU.cleanAuthor(author[0],status,false));
 		
 		try{
 			var editor = doc.querySelector(".field-name-field-paper-title p a").nextSibling.textContent.trim().split(", ");
-			if(editor[1].search("ed.") != -1){
+			if (editor[1].search("ed.") != -1) {
 				item.edition = editor[1];
 				item.publisher = editor[2];
 			}
 			else item.publisher = editor[1];
 			item.date = editor[editor.length-1].split(" ")[0];
 		}
-		catch(err){
+		catch (err) {
 		}
 		
 		pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
