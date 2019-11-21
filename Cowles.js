@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 11:42:23"
+	"lastUpdated": "2019-11-21 11:58:59"
 }
 
 /*
@@ -98,9 +98,11 @@ function doWeb(doc, url) {
 
 function scrape(doc, url){
 	var root = "https://cowles.yale.edu";
+	var pdfurl = ""
+	var item = null
 	// Each type of document follow a different layout, which seems to be the same inside all three categories
 	if (url.includes('/cfp/')) {
-		var item = new Zotero.Item("journalArticle");
+		item = new Zotero.Item("journalArticle");
 		item.title = doc.evaluate("//strong[contains(., 'CFP Paper Title')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		item.publicationTitle = doc.evaluate("//strong[contains(., 'Journal')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		item.date = doc.evaluate("//strong[contains(., 'CFP Date')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
@@ -114,7 +116,7 @@ function scrape(doc, url){
 		item.extra = "See also: " + doc.evaluate("//strong[contains(., 'See CFDP')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 	}
 	else if(url.includes('/cfdp/')) {
-		var item = new Zotero.Item("report");
+		item = new Zotero.Item("report");
 		item.title = doc.querySelector('h3 a').textContent;
 		item.reportType = "Cowles Foundation Discussion Paper";
 		item.reportNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
@@ -125,7 +127,7 @@ function scrape(doc, url){
 		item.date = doc.evaluate("//strong[contains(., 'Publication Date')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		item.pages = doc.evaluate("//strong[contains(., 'Pages')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
 		item.abstractNote = doc.evaluate("//strong[contains(., 'Abstract')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().parentElement.nextSibling.textContent;
-		var pdfurl = doc.querySelector('h3 a').getAttribute('href');
+		pdfurl = doc.querySelector('h3 a').getAttribute('href');
 		item.attachments.push({
 			title: item.title,
 			mimeType:"application/pdf",
@@ -133,15 +135,18 @@ function scrape(doc, url){
 		});
 	}
 	else if (url.includes('/cfm-')) {
-		var item = new Zotero.Item("book");
+		item = new Zotero.Item("book");
 		item.title = doc.querySelector('a[href*="/pub/"]').textContent;
 		item.series = "Cowles Monograph";
 		item.seriesNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
 		item.libraryCatalog = "Cowles Foundation";
 		
-		var tmp = doc.querySelector(".field-name-field-paper-title p").textContent.split(", ");
 		var status = "";
-		var author = doc.querySelector(".field-name-field-paper-title p a").previousSibling.textContent.trim().split(",");
+		var author = doc.querySelector(".field-name-field-paper-title p a")
+		.previousSibling
+		.textContent
+		.trim()
+		.split(",");
 		if(author[1] == " ed." || author[1] == " eds.") status = "editor";
 		else status = "author";
 		
@@ -150,7 +155,7 @@ function scrape(doc, url){
 			for(let auth of authors){
 				item.creators.push(ZU.cleanAuthor(auth,status,false));
 			}
-		}		
+		}
 		else if(author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false));
 		else item.creators.push(ZU.cleanAuthor(author[0],status,false));
 		
@@ -166,7 +171,7 @@ function scrape(doc, url){
 		catch(err){
 		}
 		
-		var pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
+		pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
 		item.attachments.push({
 			title: item.title,
 			mimeType:"application/pdf",
