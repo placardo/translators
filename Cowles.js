@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 11:04:08"
+	"lastUpdated": "2019-11-21 11:31:57"
 }
 
 /*
@@ -37,20 +37,20 @@
 
 
 function detectWeb(doc, url) {
-  // TODO: adjust the logic here
-  if(url.includes('/cfp/')){
-  	return "journalArticle"
-  }
-  else if (url.includes('/cfdp/')) {
-	return "report";
-  }
-  else if (url.includes('/cfm-')) {
-	return "book";
-  }
-  else if (getSearchResults(doc, true)) {
-	return "multiple";
-  }
-  return false;
+	// TODO: adjust the logic here
+	if(url.includes('/cfp/')){
+		return "journalArticle";
+	}
+	else if (url.includes('/cfdp/')) {
+		return "report";
+	}
+	else if (url.includes('/cfm-')) {
+		return "book";
+	}
+	else if (getSearchResults(doc, true)) {
+		return "multiple";
+	}
+	return false;
 }
 
 function getSearchResults(doc, checkOnly) {
@@ -144,22 +144,22 @@ function scrape(doc, url){
 		else status = "author";
 		
 		if(author[0].search(" and ") != -1){
-			var authors = author[0].split(" and ")
+			var authors = author[0].split(" and ");
 			for(let auth of authors){
-				item.creators.push(ZU.cleanAuthor(auth,status,false))
+				item.creators.push(ZU.cleanAuthor(auth,status,false));
 			}
 		}		
-		else if(author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false))
+		else if(author[0].search(" & ") != -1) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],status,false));
 		else item.creators.push(ZU.cleanAuthor(author[0],status,false));
 		
 		try{
 			var editor = doc.querySelector(".field-name-field-paper-title p a").nextSibling.textContent.trim().split(", ");
 			if(editor[1].search("ed.") != -1){
-				item.edition = editor[1]
-				item.publisher = editor[2]
+				item.edition = editor[1];
+				item.publisher = editor[2];
 			}
-			else item.publisher = editor[1]
-			item.date = editor[editor.length-1].split(" ")[0]
+			else item.publisher = editor[1];
+			item.date = editor[editor.length-1].split(" ")[0];
 		}
 		catch(err){
 		}
