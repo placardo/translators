@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 10:52:31"
+	"lastUpdated": "2019-11-21 10:56:44"
 }
 
 /*
@@ -247,6 +247,42 @@ var testCases = [
 				"attachments": [
 					{
 						"title": "Two New Proofs of Afriat's Theorem",
+						"mimeType": "application/pdf"
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
+	},
+	{
+		"type": "web",
+		"url": "https://cowles.yale.edu/publications/archives/cfm",
+		"items": "multiple"
+	},
+	{
+		"type": "web",
+		"url": "https://cowles.yale.edu/cfm-5",
+		"items": [
+			{
+				"itemType": "book",
+				"title": "The Variate Diﬀerence Method",
+				"creators": [
+					{
+						"firstName": "Gerhard",
+						"lastName": "Tintner",
+						"creatorType": "author"
+					}
+				],
+				"date": "1940",
+				"libraryCatalog": "Cowles Foundation",
+				"publisher": "Principia Press",
+				"series": "Cowles Monograph",
+				"seriesNumber": "5",
+				"attachments": [
+					{
+						"title": "The Variate Diﬀerence Method",
 						"mimeType": "application/pdf"
 					}
 				],
