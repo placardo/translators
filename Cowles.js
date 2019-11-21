@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-21 10:56:44"
+	"lastUpdated": "2019-11-21 11:04:08"
 }
 
 /*
@@ -60,6 +60,8 @@ function getSearchResults(doc, checkOnly) {
 	var rows = doc.querySelectorAll(".views-table tbody tr");
 	for (let row of rows) {
 		paper = row.querySelector("td").textContent.trim().toLowerCase().replace(".","").split(" ");
+		// There are three types of documents: monographs (books), discussion papers (reports) and papers which were published
+		// This query method works on the monograph pages and the authors' pages for now
 		if(paper[0] == "cfm"){
 			var href = root + "/" + paper.join("-");
 			var title = row.querySelector("td.views-field-field-paper-title a").textContent;
@@ -94,6 +96,7 @@ function doWeb(doc, url) {
 
 function scrape(doc, url){
 	var root = "https://cowles.yale.edu";
+	// Each type of document follow a different layout, which seems to be the same inside all three categories
 	if (url.includes('/cfp/')) {
 		item = new Zotero.Item("journalArticle");
 		item.title = doc.evaluate("//strong[contains(., 'CFP Paper Title')]", doc, null, XPathResult.ANY_TYPE, null).iterateNext().nextSibling.textContent;
