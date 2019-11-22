@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gcsibv",
-	"lastUpdated": "2019-11-22 08:54:59"
+	"lastUpdated": "2019-11-22 09:02:57"
 }
 
 /*
@@ -94,13 +94,13 @@ function doWeb(doc, url) {
 		Zotero.selectItems(getSearchResults(doc, false), function (items) {
 			if (items) ZU.processDocuments(Object.keys(items), scrape);
 		});
-	} else
-	{
+	}
+	else {
 		scrape(doc, url);
 	}
 }
 
-function scrape(doc, url){
+function scrape(doc, url) {
 	var root = "https://cowles.yale.edu";
 	var pdfurl = "";
 	var item = null;
@@ -114,12 +114,12 @@ function scrape(doc, url){
 		item.issue = ZU.xpathText(doc, "//strong[contains(., 'CFP Vol(Issue)')]/following-sibling::text()").split('(')[1][0];
 		item.pages = ZU.xpathText(doc, "//strong[contains(., 'CFP page numbers')]/following-sibling::text()").split(',')[0];
 		author = doc.querySelectorAll("div.comma span.comma a");
-		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
+		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent, "author", false));
 		item.url = ZU.xpathText(doc, "//strong[contains(., 'CFP Paper Title')]/following-sibling::a/@href");
 		item.libraryCatalog = "Cowles Foundation";
 		try {
 			let seeAlso = "See also: " + ZU.xpathText(doc, "//strong[contains(., 'See CFDP')]/following-sibling::span//text()");
-			item.notes.push({note:seeAlso});
+			item.notes.push({ note:seeAlso });
 		}
 		catch (err) {}
 	}
@@ -129,7 +129,7 @@ function scrape(doc, url){
 		item.reportType = "Cowles Foundation Discussion Paper";
 		item.reportNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
 		author = doc.querySelectorAll("div.comma span.comma a");
-		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent,"author",false));
+		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent, "author", false));
 
 		item.libraryCatalog = "Cowles Foundation";
 		item.date = ZU.strToISO(ZU.xpathText(doc, "//strong[contains(., 'Publication Date')]/following-sibling::span//text()"));
@@ -141,8 +141,8 @@ function scrape(doc, url){
 		pdfurl = doc.querySelector('h3 a').getAttribute('href');
 		item.attachments.push({
 			title: item.title,
-			mimeType:"application/pdf",
-			url:pdfurl
+			mimeType: "application/pdf",
+			url: pdfurl
 		});
 	}
 	else if (url.includes('/cfm-')) {
@@ -164,11 +164,11 @@ function scrape(doc, url){
 		if (author[0].includes(" and ")) {
 			var authors = author[0].split(" and ");
 			for (let auth of authors){
-				item.creators.push(ZU.cleanAuthor(auth,creatorType,false));
+				item.creators.push(ZU.cleanAuthor(auth, creatorType, false));
 			}
 		}
-		else if (author[0].includes(" & ")) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0],creatorType,false));
-		else item.creators.push(ZU.cleanAuthor(author[0],creatorType,false));
+		else if (author[0].includes(" & ")) item.creators.push(ZU.cleanAuthor(author[0].split(" & ")[0], creatorType, false));
+		else item.creators.push(ZU.cleanAuthor(author[0], creatorType, false));
 		
 		try {
 			var editor = doc.querySelector(".field-name-field-paper-title p a").nextSibling.textContent.trim().split(", ");
@@ -177,15 +177,15 @@ function scrape(doc, url){
 				item.publisher = editor[2];
 			}
 			else item.publisher = editor[1];
-			item.date = ZU.strToISO(editor[editor.length-1].split(" ")[0]);
+			item.date = ZU.strToISO(editor[editor.length - 1].split(" ")[0]);
 		}
 		catch (err) {}
 		
 		pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
 		item.attachments.push({
 			title: item.title,
-			mimeType:"application/pdf",
-			url:pdfurl
+			mimeType: "application/pdf",
+			url: pdfurl
 		});
 	}
 	
