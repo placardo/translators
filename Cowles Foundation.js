@@ -149,7 +149,7 @@ function scrape(doc, url) {
 			item.abstractNote = ZU.xpathText(doc, "//p[contains(., 'Abstract')]/following-sibling::p/text()");
 		}
 		catch (err) {}
-		pdfurl = doc.querySelector('h3 a').getAttribute('href');
+		pdfurl = attr(doc, 'h3 a', 'href');
 		item.attachments.push({
 			title: item.title,
 			mimeType: "application/pdf",
@@ -192,7 +192,7 @@ function scrape(doc, url) {
 		}
 		catch (err) {}
 		
-		pdfurl = root + doc.querySelector('a[href*="/pub/"]').getAttribute('href');
+		pdfurl = root + attr(doc, 'a[href*="/pub/"]', 'href');
 		item.attachments.push({
 			title: item.title,
 			mimeType: "application/pdf",
