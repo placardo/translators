@@ -110,8 +110,11 @@ function scrape(doc, url) {
 		item.title = ZU.xpathText(doc, "//strong[contains(., 'CFP Paper Title')]/following-sibling::a/text()");
 		item.publicationTitle = ZU.xpathText(doc, "//strong[contains(., 'Journal')]/following-sibling::em//text()");
 		item.date = ZU.strToISO(ZU.xpathText(doc, "//strong[contains(., 'CFP Date')]/following-sibling::span//text()"));
-		item.volume = ZU.xpathText(doc, "//strong[contains(., 'CFP Vol(Issue)')]/following-sibling::text()").split('(')[0];
-		item.issue = ZU.xpathText(doc, "//strong[contains(., 'CFP Vol(Issue)')]/following-sibling::text()").split('(')[1][0];
+		try {
+			item.volume = ZU.xpathText(doc, "//strong[contains(., 'CFP Vol(Issue)')]/following-sibling::text()").split('(')[0];
+			item.issue = ZU.xpathText(doc, "//strong[contains(., 'CFP Vol(Issue)')]/following-sibling::text()").split('(')[1][0];
+		}
+		catch (err) {}
 		item.pages = ZU.xpathText(doc, "//strong[contains(., 'CFP page numbers')]/following-sibling::text()").split(',')[0];
 		author = doc.querySelectorAll("div.comma span.comma a");
 		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent, "author", false));
