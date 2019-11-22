@@ -35,6 +35,15 @@
 	***** END LICENSE BLOCK *****
 */
 
+function text(docOrElem, selector, index) {
+	var elem = index ? docOrElem.querySelectorAll(selector).item(index) : docOrElem.querySelector(selector);
+	return elem ? elem.textContent : null;
+}
+
+function attr(docOrElem, selector, attr, index) {
+	var elem = index ? docOrElem.querySelectorAll(selector).item(index) : docOrElem.querySelector(selector);
+	return elem ? elem.getAttribute(attr) : null;
+}
 
 function detectWeb(doc, url) {
 	if (url.includes('/cfp/')) {
@@ -60,8 +69,7 @@ function getSearchResults(doc, checkOnly) {
 	var href = "";
 	var title = "";
 	for (let row of rows) {
-		var paper = row.querySelector("td")
-		.textContent
+		var paper = text(row, "td")
 		.trim()
 		.toLowerCase()
 		.replace(".", "")
@@ -70,15 +78,15 @@ function getSearchResults(doc, checkOnly) {
 		// This query method works on the monograph pages and the authors' pages for now
 		if (paper[0] == "cfm") {
 			href = root + "/" + paper.join("-");
-			title = row.querySelector("td.views-field-field-paper-title a").textContent;
+			title = text(row, "td.views-field-field-paper-title a");
 		}
 		else if (paper[0] == "cfdp") {
 			href = root + "/publications/" + paper[0] + "/" + paper.join("-");
-			title = row.querySelector("td.views-field-field-author-from-list strong a").textContent;
+			title = text(row, "td.views-field-field-author-from-list strong a");
 		}
 		else if (paper[0] == "cfp") {
 			href = root + "/publications/" + paper[0] + "/" + paper.join("");
-			title = row.querySelector("td.views-field-field-author-from-list strong a").textContent;
+			title = text(row, "td.views-field-field-author-from-list strong a");
 		}
 		
 		if (!href || !title) continue;
@@ -128,9 +136,9 @@ function scrape(doc, url) {
 	}
 	else if (url.includes('/cfdp/')) {
 		item = new Zotero.Item("report");
-		item.title = doc.querySelector('h3 a').textContent;
+		item.title = text(doc, 'h3 a');
 		item.reportType = "Cowles Foundation Discussion Paper";
-		item.reportNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
+		item.reportNumber = text(doc, "#page-title").match(/\d+/)[0];
 		author = doc.querySelectorAll("div.comma span.comma a");
 		for (let auth of author) item.creators.push(ZU.cleanAuthor(auth.textContent, "author", false));
 
@@ -150,9 +158,9 @@ function scrape(doc, url) {
 	}
 	else if (url.includes('/cfm-')) {
 		item = new Zotero.Item("book");
-		item.title = doc.querySelector('a[href*="/pub/"]').textContent;
+		item.title = text(doc, 'a[href*="/pub/"]');
 		item.series = "Cowles Monograph";
-		item.seriesNumber = doc.querySelector("#page-title").textContent.match(/\d+/)[0];
+		item.seriesNumber = text(doc, "#page-title").match(/\d+/)[0];
 		item.libraryCatalog = "Cowles Foundation";
 		
 		var creatorType = "author";
