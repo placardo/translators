@@ -119,7 +119,7 @@ function scrape(doc, url) {
 		item.libraryCatalog = "Cowles Foundation";
 		try {
 			let seeAlso = "See also: " + ZU.xpathText(doc, "//strong[contains(., 'See CFDP')]/following-sibling::span//text()");
-			item.notes.push({ note:seeAlso });
+			if (seeAlso != "See also: null") item.notes.push({ note:seeAlso });
 		}
 		catch (err) {}
 	}
