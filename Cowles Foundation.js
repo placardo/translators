@@ -56,7 +56,6 @@ function detectWeb(doc, url) {
 }
 
 function getSearchResults(doc, checkOnly) {
-	var root = "https://cowles.yale.edu";
 	var items = {};
 	var found = false;
 	var rows = doc.querySelectorAll(".views-table tbody tr");
@@ -71,15 +70,15 @@ function getSearchResults(doc, checkOnly) {
 		// There are three types of documents: monographs (books), discussion papers (reports) and papers which were published
 		// This query method works on the monograph pages and the authors' pages for now
 		if (paper[0] == "cfm") {
-			href = root + "/" + paper.join("-");
+			href = "/" + paper.join("-");
 			title = text(row, "td.views-field-field-paper-title a");
 		}
 		else if (paper[0] == "cfdp") {
-			href = root + "/publications/" + paper[0] + "/" + paper.join("-");
+			href = "/publications/" + paper[0] + "/" + paper.join("-");
 			title = text(row, "td.views-field-field-author-from-list strong a");
 		}
 		else if (paper[0] == "cfp") {
-			href = root + "/publications/" + paper[0] + "/" + paper.join("");
+			href = "/publications/" + paper[0] + "/" + paper.join("");
 			title = text(row, "td.views-field-field-author-from-list strong a");
 		}
 		
@@ -103,7 +102,6 @@ function doWeb(doc, url) {
 }
 
 function scrape(doc, url) {
-	var root = "https://cowles.yale.edu";
 	var pdfurl = "";
 	var item = null;
 	// Each type of document follow a different layout, which seems to be the same inside all three categories
@@ -186,7 +184,7 @@ function scrape(doc, url) {
 		}
 		catch (err) {}
 		
-		pdfurl = root + attr(doc, 'a[href*="/pub/"]', 'href');
+		pdfurl = attr(doc, 'a[href*="/pub/"]', 'href');
 		item.attachments.push({
 			title: item.title,
 			mimeType: "application/pdf",
