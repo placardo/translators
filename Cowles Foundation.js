@@ -103,6 +103,7 @@ function doWeb(doc, url) {
 }
 
 function scrape(doc, url) {
+	var root = "https://cowles.yale.edu";
 	var pdfurl = "";
 	var item = null;
 	// Each type of document follow a different layout, which seems to be the same inside all three categories
@@ -185,7 +186,7 @@ function scrape(doc, url) {
 		}
 		catch (err) {}
 		
-		pdfurl = attr(doc, 'a[href*="/pub/"]', 'href');
+		pdfurl = root + attr(doc, 'a[href*="/pub/"]', 'href');
 		item.attachments.push({
 			title: item.title,
 			mimeType: "application/pdf",
