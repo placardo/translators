@@ -35,15 +35,9 @@
 	***** END LICENSE BLOCK *****
 */
 
-function text(docOrElem, selector, index) {
-	var elem = index ? docOrElem.querySelectorAll(selector).item(index) : docOrElem.querySelector(selector);
-	return elem ? elem.textContent : null;
-}
-
-function attr(docOrElem, selector, attr, index) {
-	var elem = index ? docOrElem.querySelectorAll(selector).item(index) : docOrElem.querySelector(selector);
-	return elem ? elem.getAttribute(attr) : null;
-}
+// attr()/text() v2
+// eslint-disable-next-line
+function attr(docOrElem,selector,attr,index){var elem=index?docOrElem.querySelectorAll(selector).item(index):docOrElem.querySelector(selector);return elem?elem.getAttribute(attr):null;}function text(docOrElem,selector,index){var elem=index?docOrElem.querySelectorAll(selector).item(index):docOrElem.querySelector(selector);return elem?elem.textContent:null;}
 
 function detectWeb(doc, url) {
 	if (url.includes('/cfp/')) {
@@ -109,7 +103,6 @@ function doWeb(doc, url) {
 }
 
 function scrape(doc, url) {
-	var root = "https://cowles.yale.edu";
 	var pdfurl = "";
 	var item = null;
 	// Each type of document follow a different layout, which seems to be the same inside all three categories
@@ -192,7 +185,7 @@ function scrape(doc, url) {
 		}
 		catch (err) {}
 		
-		pdfurl = root + attr(doc, 'a[href*="/pub/"]', 'href');
+		pdfurl = attr(doc, 'a[href*="/pub/"]', 'href');
 		item.attachments.push({
 			title: item.title,
 			mimeType: "application/pdf",
