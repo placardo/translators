@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gc",
-	"lastUpdated": "2019-12-11 21:45:29"
+	"lastUpdated": "2019-12-11 23:47:08"
 }
 
 /*
@@ -35,37 +35,35 @@
 function attr(docOrElem,selector,attr,index){var elem=index?docOrElem.querySelectorAll(selector).item(index):docOrElem.querySelector(selector);return elem?elem.getAttribute(attr):null;}function text(docOrElem,selector,index){var elem=index?docOrElem.querySelectorAll(selector).item(index):docOrElem.querySelector(selector);return elem?elem.textContent:null;}
 
 /* Bnf namespace. */
-var BnfClass = function() {
-	//Private members
-
-
+var BnfClass = function () {
+	// Private members
 
 	/* Map MARC responsibility roles to Zotero creator types.
 		See http://archive.ifla.org/VI/3/p1996-1/appx-c.htm.
 	*/
+	
 	function getCreatorType(aut) {
-
 		var typeAut = aut['4'].trim();
 		switch (typeAut) {
 			case "005":
 			case "250":
 			case "275":
-			case "590": //performer
-			case "755": //vocalist
+			case "590": // performer
+			case "755": // vocalist
 				return "performer";
 			case "040":
-			case "130": //book designer
-			case "740": //type designer
-			case "750": //typographer
-			case "350": //engraver
-			case "360": //etcher
-			case "430": //illuminator
-			case "440": //illustrator
-			case "510": //lithographer
-			case "530": //metal engraver
-			case "600": //photographer
-			case "705": //sculptor
-			case "760": //wood engraver
+			case "130": // book designer
+			case "740": // type designer
+			case "750": // typographer
+			case "350": // engraver
+			case "360": // etcher
+			case "430": // illuminator
+			case "440": // illustrator
+			case "510": // lithographer
+			case "530": // metal engraver
+			case "600": // photographer
+			case "705": // sculptor
+			case "760": // wood engraver
 				return "artist";
 			case "070":
 			case "305":
@@ -86,20 +84,20 @@ var BnfClass = function() {
 			case "245":
 				return "inventor";
 			case "255":
-			case "695": //scientific advisor
-			case "727": //thesis advisor
+			case "695": // scientific advisor
+			case "727": // thesis advisor
 				return "counsel";
 			case "300":
 				return "director";
-			case "400": //funder
-			case "723": //sponsor
+			case "400": // funder
+			case "723": // sponsor
 				return "sponsor";
 			case "460":
 				return "interviewee";
 			case "470":
 				return "interviewer";
-			case "480": //librettist
-			case "520": //lyricist
+			case "480": // librettist
+			case "520": // lyricist
 				return "wordsBy";
 			case "605":
 				return "presenter";
@@ -109,51 +107,51 @@ var BnfClass = function() {
 				return "programmer";
 			case "660":
 				return "recipient";
-			case "090": //author of dialog
-			case "690": //scenarist
+			case "090": // author of dialog
+			case "690": // scenarist
 				return "scriptwriter";
 			case "730":
 				return "translator";
-				//Ignore (no matching Zotero creatorType):
-			case "320": //donor
-			case "610": //printer
-			case "650": //publisher
+				// Ignore (no matching Zotero creatorType):
+			case "320": // donor
+			case "610": // printer
+			case "650": // publisher
 				return undefined;
-				//Default
+				// Default
 			case "205":
 			default:
 				return "contributor";
 		}
-	};
+	}
 
 	/* Fix creators (MARC translator is not perfect). */
 	function getCreators(record, item) {
-		//Clear creators
-		item.creators = new Array();
+		// Clear creators
+		item.creators = [];
 		// Extract creators (700, 701 & 702)
-		for (var i = 700; i < 703; i++) {
-			var authorTag = record.getFieldSubfields(i);
-			for (var j in authorTag) {
-				var aut = authorTag[j];
-				var authorText = "";
+		for (let i = 700; i < 703; i++) {
+			let authorTag = record.getFieldSubfields(i);
+			for (let j in authorTag) {
+				let aut = authorTag[j];
+				let authorText = "";
 				if (aut.b) {
-					authorText = aut['a'] + ", " + aut['b'];
-				} else {
-					authorText = aut['a'];
+					authorText = aut.a + ", " + aut.b;
 				}
-				var type = getCreatorType(aut);
+				else {
+					authorText = aut.a;
+				}
+				let type = getCreatorType(aut);
 				if (type) {
-
 					item.creators.push(Zotero.Utilities.cleanAuthor(authorText, type, true));
 				}
 			}
 		}
 		// Extract corporate creators (710, 711 & 712)
-		for (var i = 710; i < 713; i++) {
-			var authorTag = record.getFieldSubfields(i);
-			for (var j in authorTag) {
+		for (let i = 710; i < 713; i++) {
+			let authorTag = record.getFieldSubfields(i);
+			for (let j in authorTag) {
 				if (authorTag[j]['a']) {
-					var type = getCreatorType(authorTag[j]);
+					let type = getCreatorType(authorTag[j]);
 					if (type) {
 						item.creators.push({
 							lastName: authorTag[j]['a'],
@@ -164,12 +162,9 @@ var BnfClass = function() {
 				}
 			}
 		}
-	};
+	}
 
-
-
-
-	//Add tag, if not present yet
+	// Add tag, if not present yet
 	function addTag(item, tag) {
 		for (var t in item.tags) {
 			if (item.tags[t] == tag) {
@@ -177,9 +172,9 @@ var BnfClass = function() {
 			}
 		}
 		item.tags.push(tag);
-	};
+	}
 
-	//Tagging
+	// Tagging
 	function getTags(record, item) {
 		var pTag = record.getFieldSubfields("600");
 		if (pTag) {
@@ -265,9 +260,9 @@ var BnfClass = function() {
 				addTag(item, tagText);
 			}
 		}
-	};
+	}
 
-	//Get series (repeatable)
+	// Get series (repeatable)
 	function getSeries(record, item) {
 		var seriesText = false;
 		var seriesTag = record.getFieldSubfields("225");
@@ -276,7 +271,8 @@ var BnfClass = function() {
 				var series = seriesTag[j];
 				if (seriesText) {
 					seriesText += "; ";
-				} else {
+				}
+				else {
 					seriesText = "";
 				}
 				seriesText += series.a;
@@ -289,7 +285,7 @@ var BnfClass = function() {
 				item.series = seriesText;
 			}
 		}
-		//Try 461
+		// Try 461
 		if (!item.series) {
 			seriesTag = record.getFieldSubfields("461");
 			if (seriesTag) {
@@ -297,7 +293,8 @@ var BnfClass = function() {
 					var series = seriesTag[j];
 					if (seriesText) {
 						seriesText += "; ";
-					} else {
+					}
+					else {
 						seriesText = "";
 					}
 					seriesText += series.t;
@@ -308,18 +305,20 @@ var BnfClass = function() {
 				item.series = seriesText;
 			}
 		}
-	};
+	}
 
-	//Add extra text
+	// Add extra text
 	function addExtra(noteText, extra) {
 		if (extra) {
 			if (noteText) {
 				if (!/\.$/.exec(noteText)) {
 					noteText += ". ";
-				} else {
+				}
+				else {
 					noteText += " ";
 				}
-			} else {
+			}
+			else {
 				noteText = "";
 			}
 			noteText += Zotero.Utilities.trim(extra);
@@ -327,10 +326,10 @@ var BnfClass = function() {
 		return noteText;
 	}
 
-	//Assemble extra information
+	// Assemble extra information
 	function getExtra(record, item) {
 		var noteText = false;
-		//Material description
+		// Material description
 		var noteTag = record.getFieldSubfields("215");
 		if (noteTag) {
 			for (var j in noteTag) {
@@ -340,7 +339,7 @@ var BnfClass = function() {
 				noteText = addExtra(noteText, note.e);
 			}
 		}
-		//Note
+		// Note
 		noteTag = record.getFieldSubfields("300");
 		if (noteTag) {
 			for (var j in noteTag) {
@@ -348,7 +347,7 @@ var BnfClass = function() {
 				noteText = addExtra(noteText, note.a);
 			}
 		}
-		//Edition history notes
+		// Edition history notes
 		noteTag = record.getFieldSubfields("305");
 		if (noteTag) {
 			for (var j in noteTag) {
@@ -362,10 +361,10 @@ var BnfClass = function() {
 			}
 			item.extra = noteText;
 		}
-	};
+	}
 
 
-	//Get title from 200
+	// Get title from 200
 	function getTitle(record, item) {
 		var titleTag = record.getFieldSubfields("200");
 		if (titleTag) {
@@ -382,38 +381,32 @@ var BnfClass = function() {
 				if (titleTag.i) {
 					titleText += ": " + titleTag.i;
 				}
-			} else if (titleTag.i) {
+			}
+			else if (titleTag.i) {
 				titleText += ", " + titleTag.i;
 			}
 			item.title = titleText;
 		}
-	};
+	}
 
 	function getCote(record, item) {
 		item.callNumber = "";
 		var coteTag = record.getFieldSubfields("930");
 
 		if (coteTag.length) {
-
 			item.callNumber += coteTag[0]['c'] + "-" + coteTag[0]['a'];
-
 		}
-	};
+	}
 
-	//Do BnF specific Unimarc postprocessing
+	// Do BnF specific Unimarc postprocessing
 	function postprocessMarc(record, newItem) {
-
-		//Title
+		// Title
 		getTitle(record, newItem);
-
-		//Fix creators
+		// Fix creators
 		getCreators(record, newItem);
-
-		//Fix callNumber
+		// Fix callNumber
 		getCote(record, newItem);
-
-		//Store perennial url from 003 as attachment and accession number
-
+		// Store perennial url from 003 as attachment and accession number
 		var url = record.getField("003");
 		if (url && url.length > 0 && url[0][1]) {
 			newItem.attachments.push({
@@ -424,14 +417,12 @@ var BnfClass = function() {
 			});
 
 		}
-
-		//Country (102a)
+		// Country (102a)
 		record._associateDBField(newItem, "102", "a", "country");
-
-		//Try to retrieve volumes/pages from 215d
+		// Try to retrieve volumes/pages from 215d
 		if (!newItem.pages) {
 			var dimTag = record.getFieldSubfields("215");
-			for (var j in dimTag) {
+			for (let j in dimTag) {
 				var dim = dimTag[j];
 				if (dim.a) {
 					var pages = /[^\d]*(\d+)\s+p\..*/.exec(dim.a);
@@ -445,109 +436,91 @@ var BnfClass = function() {
 				}
 			}
 		}
-
-		//Series
+		// Series
 		getSeries(record, newItem);
-
-		//Extra
+		// Extra
 		getExtra(record, newItem);
-
-		//Tagging
+		// Tagging
 		getTags(record, newItem);
+		// Repository
+		newItem.libraryCatalog = "BnF Catalogue général (http:// catalogue.bnf.fr)";
+	}
 
-		//Repository
-		newItem.libraryCatalog = "BnF Catalogue général (http://catalogue.bnf.fr)";
-	};
-
-
-	//Public members
-
-
+	// Public members
 	/* Get the UNIMARC URL for a given single result page. */
-	this.reformURL = function(url) {
+	this.reformURL = function (url) {
 		url = url.replace(/(^.*\/ark:\/12148\/cb[0-9]+[a-z]*)(.*$)/, "$1.unimarc");
 		// Zotero.debug("URL1 "+ url);
 		return url;
-	};
+	}
 
-
-	/* Get the results table from a list page, if any. Looks for //table[@class="ListeNotice"]. */
-	this.getResultsTable = function(doc) {
+	/* Get the results table from a list page, if any. Looks for // table[@class="ListeNotice"]. */
+	this.getResultsTable = function (doc) {
 		try {
-			var xPath = '//div[@class="liste-notices"]';
-			var xPathObject = doc.evaluate(xPath, doc, null, XPathResult.ANY_TYPE, null).iterateNext();
+			var xPathObject = ZU.xpath(doc, '// div[@class="liste-notices"]');
 			return xPathObject;
-		} catch (x) {
+		}
+		catch (x) {
 			Zotero.debug(x.lineNumber + " " + x.message);
 		}
 		return undefined;
-	};
-
-
-
+	}
 
 	/* Get selectable search items from a list page. 
 		Loops through //td[@class="mn_partienoticesynthetique"], extracting the single items URLs from
 		their onclick attribute, thier titles by assembling the spans for each cell.
 	*/
-	this.getSelectedItems = function(doc) {
-		var items = new Object();
-		var cellPath = '//div[@class="liste-notices"]/div[@class="notice-item"]';
-		var cells = doc.evaluate(cellPath, doc, null, XPathResult.ANY_TYPE, null);
-		while (cell = cells.iterateNext()) {
-			var link = doc.evaluate('./div[@class="notice-contenu"]/div[@class="notice-synthese"]/a', cell, null, XPathResult.ANY_TYPE, null).iterateNext();
-
-			var title = doc.evaluate('./h2', link, null, XPathResult.ANY_TYPE, null).iterateNext();
-			if (title) {
-				title = ZU.trim(title.textContent);
-			} else {
-				// 2016-01-26 : Sometimes there is no H2, we then need to get everything, example when searching for : 
-				// "Se souvenir de Tonnay-Charente"
-				title = ZU.trim(link.textContent);
+	this.getSelectedItems = function (doc) {
+		var items = {};
+		var found = false;
+		var rows = ZU.xpath(doc, '//div[@class="liste-notices"]/div[@class="notice-item"]/div[@class="notice-contenu"]');
+		for (var i = 0; i < rows.length; i++) {
+			var title = ""
+			var href = attr(rows[i], 'div[class="notice-synthese"] a', "href");
+			try{
+				title = ZU.trim(text(rows[i], 'div[class="notice-synthese"] a h2'));
 			}
-
-			var documentYear = doc.evaluate('./div[@class="notice-ordre"]', cell, null, XPathResult.ANY_TYPE, null).iterateNext();
-			if (documentYear) {
-				title += " / " + documentYear.textContent;
+			catch (x) {
+				title = ZU.trim(text(rows[i], 'div[class="notice-synthese"] a'));
 			}
-			var url = link.href;
-			items[url] = title;
+			var documentYear = text(rows[i], 'span[class="notice-ordre"]');
+			if (documentYear.length == 6) {
+				title += " / " + documentYear;
+			}
+			if (!href || !title) continue;
+			found = true;
+			items[href] = title;
 		}
-
-		return items;
-	};
-
-
-	//Check for Gallica URL (digital version available), if found, set item.url
-	function checkGallica(record, item) {
-
-
-		var url = record.getFieldSubfields("856");
-
-		if (url && url.length > 0 && url[0].u) {
-			item.url = url[0].u;
-
-		}
-
+		return found ? items : false;
 	}
 
+	// Check for Gallica URL (digital version available), if found, set item.url
+	function checkGallica(record, item) {
+		var url = record.getFieldSubfields("856");
+		if (url && url.length > 0 && url[0].u) {
+			item.url = url[0].u;
+		}
+	}
 
 	/* Process UNIMARC URL. */
-	this.processMarcUrl = function(newDoc, url) {
+	this.processMarcUrl = function (newDoc, url) {
+		
 		/* Init MARC record. */
 		// Load MARC
 		var translator = Zotero.loadTranslator("import");
 		translator.setTranslator("a6ee60df-1ddc-4aae-bb25-45e0537be973");
-		translator.getTranslatorObject(function(obj) {
+		translator.getTranslatorObject(function (obj) {
 			var record = new obj.record();
+			
 			/* Get table cell containing MARC code. */
-			var elmts = newDoc.evaluate('//div[@class="notice-detail"]/div/div[@class="zone"]',
-				newDoc, null, XPathResult.ANY_TYPE, null);
+			var elmts = ZU.xpath(newDoc, '//div[@class="notice-detail"]/div/div[@class="zone"]');
+				
 			/* Line loop. */
 			var elmt, tag, content;
 			var ind = "";
 
-			while (elmt = elmts.iterateNext()) {
+			for (var i = 0; i < elmts.length; i++) {
+				elmt = elmts[i];
 				var line = Zotero.Utilities.superCleanString(elmt.textContent);
 				if (line.length == 0) {
 					continue;
@@ -555,10 +528,9 @@ var BnfClass = function() {
 				if (line.substring(0, 6) == "       ") {
 					content += " " + line.substring(6);
 					continue;
-				} else {
-					if (tag) {
-						record.addField(tag, ind, content);
-					}
+				}
+				else if (tag) {
+					record.addField(tag, ind, content);
 				}
 				line = line.replace(/[_\t\xA0]/g, " "); // nbsp
 				tag = line.substr(0, 3);
@@ -567,40 +539,36 @@ var BnfClass = function() {
 					content = line.substr(5).replace(/\$([a-z]|[0-9])/g, obj.subfieldDelimiter + "$1");
 					content = content.replace(/ˆ([^‰]+)‰/g, "$1");
 
-				} else {
-					if (tag == "000") {
-						tag = undefined;
-
-						record.leader = "0000" + line.substr(8);
-
-					} else {
-						content = line.substr(3);
-					}
+				}
+				else if (tag == "000") {
+					tag = undefined;
+					record.leader = "0000" + line.substr(8);
+				}
+				else {
+					content = line.substr(3);
 				}
 			}
 			// case last zone
 			if (tag) {
 				record.addField(tag, ind, content);
 			}
-			//Create item
+			// Create item
 			var newItem = new Zotero.Item();
 			record.translate(newItem);
 
-
-
-			//Do specific Unimarc postprocessing
+			// Do specific Unimarc postprocessing
 			postprocessMarc(record, newItem);
 
-			//Check for Gallica URL
+			// Check for Gallica URL
 			checkGallica(record, newItem);
 
-			//We have to restore the public view for the next actions
-			//by the users, which is achieved by opening the url with
-			//public ending again.
-			if (url.indexOf('.public')==-1) {
+			// We have to restore the public view for the next actions
+			// by the users, which is achieved by opening the url with
+			// public ending again.
+			if (url.includes('.public')) {
 				url = url.replace('.unimarc', '') + '.public';
 			}
-			ZU.doGet(url, function(text) {;
+			ZU.doGet(url, function () {
 				newItem.complete();
 			});
 		});
@@ -630,58 +598,59 @@ var typeMapping = {
 
 function detectWeb(doc, url) {
 	var resultRegexp = /ark:\/12148\/cb[0-9]+/i;
-	//Single result ?
+	// Single result ?
 	if (resultRegexp.test(url)) {
-		itemType = attr(doc, 'meta[name="DC.type"][lang="eng"]', "content");
-		if(typeMapping[itemType]) {
+		var itemType = attr(doc, 'meta[name="DC.type"][lang="eng"]', "content");
+		if (typeMapping[itemType]) {
 			return typeMapping[itemType];
 		}
 		else {
 			return "single";
 		}
 	}
-	//Muliple result ?
+	// Muliple result ?
 	else if (Bnf.getResultsTable(doc)) {
 		return "multiple";
 	}
-	//No items 
+	// No items
 	return undefined;
 }
 
-
 function doWeb(doc, url) {
+	
 	/* Check type. */
 	var type = detectWeb(doc, url);
-
 	Zotero.debug("type " + type);
 	if (!type) {
 		return;
 	}
+	
 	/* Build array of MARC URLs. */
-	var urls = new Array();
+	var urls = [];
 	switch (type) {
 		case "multiple":
 			var items = Bnf.getSelectedItems(doc);
 			if (!items) {
 				return true;
 			}
+			
 			/* Let user select items. */
-			Zotero.selectItems(items, function(items) {
+			Zotero.selectItems(items, function (items) {
 				for (var i in items) {
 					urls.push(Bnf.reformURL(i));
 				}
 				if (urls.length > 0) {
-					//Z.debug(urls)
-					Zotero.Utilities.processDocuments(urls, function(doc) {
-						Bnf.processMarcUrl.call(Bnf, doc, urls[0]);
+					// Z.debug(urls)
+					Zotero.Utilities.processDocuments(urls, function (doc) {
+						Bnf.processMarcUrl(doc, urls[0]);
 					});
 				}
 			});
 			break;
 		default:
 			urls = [Bnf.reformURL(url)];
-			Zotero.Utilities.processDocuments(urls, function(doc) {
-				Bnf.processMarcUrl.call(Bnf, doc, url);
+			Zotero.Utilities.processDocuments(urls, function (doc) {
+				Bnf.processMarcUrl(doc, url);
 			});
 			break;
 	}
@@ -706,7 +675,7 @@ var testCases = [
 				"date": "1680",
 				"extra": "510 x 570. Le titre est en bas et à gauche dans un cartouche monumental décoré d'un Amour. En haut de la carte, deux Amours portent un écu aux armes de l'Ecosse. Vers 1680.",
 				"language": "lat",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"place": "S.l.",
 				"publisher": "s.n.",
 				"attachments": [
@@ -745,7 +714,7 @@ var testCases = [
 				"callNumber": "Tolbiac - Rez de Jardin - Littérature et art - Magasin - 2013-334011",
 				"extra": "couv. ill. 21 cm. Bibliogr., 3 p.",
 				"language": "fre",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"numPages": "468",
 				"numberOfVolumes": "1",
 				"place": "Paris",
@@ -775,7 +744,7 @@ var testCases = [
 				"distributor": "Centre national de documentation pédagogique",
 				"extra": "coul. (SECAM), son. Titre de dos : \"Sciences de la vie et de la terre, problèmes et pratiques. Notice réd. d'après un document produit en 1996.",
 				"language": "fre",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"shortTitle": "Problèmes et pratiques",
 				"attachments": [
 					{
@@ -805,7 +774,7 @@ var testCases = [
 				],
 				"extra": "formats divers. Comprend deux séries : \"Le Petit Chaperon rouge\" et \"La Belle au Bois Dormant.",
 				"language": "fre",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"shortTitle": "[Recueil. Vues stéréoscopiques de Louis]",
 				"attachments": [
 					{
@@ -850,7 +819,7 @@ var testCases = [
 					}
 				],
 				"language": "fre",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"place": "1895-1922",
 				"attachments": [
 					{
@@ -876,7 +845,7 @@ var testCases = [
 				"extra": "6 brochures.",
 				"label": "Bear family records",
 				"language": "eng",
-				"libraryCatalog": "BnF Catalogue général (http://catalogue.bnf.fr)",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
 				"place": "Hambergen (Allemagne)",
 				"shortTitle": "The complete D singles collection",
 				"attachments": [
