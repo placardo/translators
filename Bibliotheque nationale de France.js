@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gc",
-	"lastUpdated": "2019-12-11 23:47:08"
+	"lastUpdated": "2019-12-12 00:03:29"
 }
 
 /*
@@ -150,11 +150,11 @@ var BnfClass = function () {
 		for (let i = 710; i < 713; i++) {
 			let authorTag = record.getFieldSubfields(i);
 			for (let j in authorTag) {
-				if (authorTag[j]['a']) {
+				if (authorTag[j].a) {
 					let type = getCreatorType(authorTag[j]);
 					if (type) {
 						item.creators.push({
-							lastName: authorTag[j]['a'],
+							lastName: authorTag[j].a,
 							creatorType: type,
 							fieldMode: true
 						});
@@ -178,9 +178,9 @@ var BnfClass = function () {
 	function getTags(record, item) {
 		var pTag = record.getFieldSubfields("600");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				if (person.b) {
 					tagText += ", " + person.b;
@@ -196,45 +196,45 @@ var BnfClass = function () {
 		}
 		pTag = record.getFieldSubfields("601");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				addTag(item, tagText);
 			}
 		}
 		pTag = record.getFieldSubfields("605");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				addTag(item, tagText);
 			}
 		}
 		pTag = record.getFieldSubfields("606");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				addTag(item, tagText);
 			}
 		}
 		pTag = record.getFieldSubfields("607");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				addTag(item, tagText);
 			}
 		}
 		pTag = record.getFieldSubfields("602");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				if (person.f) {
 					tagText += " (" + person.f + ")";
@@ -244,9 +244,9 @@ var BnfClass = function () {
 		}
 		pTag = record.getFieldSubfields("604");
 		if (pTag) {
-			for (var j in pTag) {
-				var tagText = false;
-				var person = pTag[j];
+			for (let j in pTag) {
+				let tagText = false;
+				let person = pTag[j];
 				tagText = person.a;
 				if (person.b) {
 					tagText += ", " + person.b;
@@ -267,8 +267,8 @@ var BnfClass = function () {
 		var seriesText = false;
 		var seriesTag = record.getFieldSubfields("225");
 		if (seriesTag && seriesTag.length > 1) {
-			for (var j in seriesTag) {
-				var series = seriesTag[j];
+			for (let j in seriesTag) {
+				let series = seriesTag[j];
 				if (seriesText) {
 					seriesText += "; ";
 				}
@@ -289,8 +289,8 @@ var BnfClass = function () {
 		if (!item.series) {
 			seriesTag = record.getFieldSubfields("461");
 			if (seriesTag) {
-				for (var j in seriesTag) {
-					var series = seriesTag[j];
+				for (let j in seriesTag) {
+					let series = seriesTag[j];
 					if (seriesText) {
 						seriesText += "; ";
 					}
@@ -332,8 +332,8 @@ var BnfClass = function () {
 		// Material description
 		var noteTag = record.getFieldSubfields("215");
 		if (noteTag) {
-			for (var j in noteTag) {
-				var note = noteTag[j];
+			for (let j in noteTag) {
+				let note = noteTag[j];
 				noteText = addExtra(noteText, note.c);
 				noteText = addExtra(noteText, note.d);
 				noteText = addExtra(noteText, note.e);
@@ -342,16 +342,16 @@ var BnfClass = function () {
 		// Note
 		noteTag = record.getFieldSubfields("300");
 		if (noteTag) {
-			for (var j in noteTag) {
-				var note = noteTag[j];
+			for (let j in noteTag) {
+				let note = noteTag[j];
 				noteText = addExtra(noteText, note.a);
 			}
 		}
 		// Edition history notes
 		noteTag = record.getFieldSubfields("305");
 		if (noteTag) {
-			for (var j in noteTag) {
-				var note = noteTag[j];
+			for (let j in noteTag) {
+				let note = noteTag[j];
 				noteText = addExtra(noteText, note.a);
 			}
 		}
@@ -371,7 +371,7 @@ var BnfClass = function () {
 			titleTag = titleTag[0];
 			var titleText = titleTag.a;
 			if (titleTag.e) {
-				if (!/^[,\.:;-]/.exec(titleTag.e)) {
+				if (!/^[,.:;-]/.exec(titleTag.e)) {
 					titleText += ": ";
 				}
 				titleText += titleTag.e;
@@ -394,7 +394,7 @@ var BnfClass = function () {
 		var coteTag = record.getFieldSubfields("930");
 
 		if (coteTag.length) {
-			item.callNumber += coteTag[0]['c'] + "-" + coteTag[0]['a'];
+			item.callNumber += coteTag[0].c + "-" + coteTag[0].a;
 		}
 	}
 
@@ -415,7 +415,6 @@ var BnfClass = function () {
 				mimeType: 'text/html',
 				snapshot: false
 			});
-
 		}
 		// Country (102a)
 		record._associateDBField(newItem, "102", "a", "country");
@@ -452,8 +451,7 @@ var BnfClass = function () {
 		url = url.replace(/(^.*\/ark:\/12148\/cb[0-9]+[a-z]*)(.*$)/, "$1.unimarc");
 		// Zotero.debug("URL1 "+ url);
 		return url;
-	}
-
+	};
 	/* Get the results table from a list page, if any. Looks for // table[@class="ListeNotice"]. */
 	this.getResultsTable = function (doc) {
 		try {
@@ -464,9 +462,8 @@ var BnfClass = function () {
 			Zotero.debug(x.lineNumber + " " + x.message);
 		}
 		return undefined;
-	}
-
-	/* Get selectable search items from a list page. 
+	};
+	/* Get selectable search items from a list page.
 		Loops through //td[@class="mn_partienoticesynthetique"], extracting the single items URLs from
 		their onclick attribute, thier titles by assembling the spans for each cell.
 	*/
@@ -475,9 +472,9 @@ var BnfClass = function () {
 		var found = false;
 		var rows = ZU.xpath(doc, '//div[@class="liste-notices"]/div[@class="notice-item"]/div[@class="notice-contenu"]');
 		for (var i = 0; i < rows.length; i++) {
-			var title = ""
+			var title = "";
 			var href = attr(rows[i], 'div[class="notice-synthese"] a', "href");
-			try{
+			try {
 				title = ZU.trim(text(rows[i], 'div[class="notice-synthese"] a h2'));
 			}
 			catch (x) {
@@ -492,7 +489,7 @@ var BnfClass = function () {
 			items[href] = title;
 		}
 		return found ? items : false;
-	}
+	};
 
 	// Check for Gallica URL (digital version available), if found, set item.url
 	function checkGallica(record, item) {
@@ -504,7 +501,6 @@ var BnfClass = function () {
 
 	/* Process UNIMARC URL. */
 	this.processMarcUrl = function (newDoc, url) {
-		
 		/* Init MARC record. */
 		// Load MARC
 		var translator = Zotero.loadTranslator("import");
@@ -538,7 +534,6 @@ var BnfClass = function () {
 					ind = line.substr(3, 2);
 					content = line.substr(5).replace(/\$([a-z]|[0-9])/g, obj.subfieldDelimiter + "$1");
 					content = content.replace(/ˆ([^‰]+)‰/g, "$1");
-
 				}
 				else if (tag == "000") {
 					tag = undefined;
@@ -617,7 +612,6 @@ function detectWeb(doc, url) {
 }
 
 function doWeb(doc, url) {
-	
 	/* Check type. */
 	var type = detectWeb(doc, url);
 	Zotero.debug("type " + type);
@@ -630,22 +624,20 @@ function doWeb(doc, url) {
 	switch (type) {
 		case "multiple":
 			var items = Bnf.getSelectedItems(doc);
-			if (!items) {
-				return true;
+			if (items) {
+				/* Let user select items. */
+				Zotero.selectItems(items, function (items) {
+					for (var i in items) {
+						urls.push(Bnf.reformURL(i));
+					}
+					if (urls.length > 0) {
+						// Z.debug(urls)
+						Zotero.Utilities.processDocuments(urls, function (doc) {
+							Bnf.processMarcUrl(doc, urls[0]);
+						});
+					}
+				});
 			}
-			
-			/* Let user select items. */
-			Zotero.selectItems(items, function (items) {
-				for (var i in items) {
-					urls.push(Bnf.reformURL(i));
-				}
-				if (urls.length > 0) {
-					// Z.debug(urls)
-					Zotero.Utilities.processDocuments(urls, function (doc) {
-						Bnf.processMarcUrl(doc, urls[0]);
-					});
-				}
-			});
 			break;
 		default:
 			urls = [Bnf.reformURL(url)];
