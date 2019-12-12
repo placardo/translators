@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gc",
-	"lastUpdated": "2019-12-12 00:03:29"
+	"lastUpdated": "2019-12-12 00:10:04"
 }
 
 /*
@@ -446,13 +446,13 @@ var BnfClass = function () {
 	}
 
 	// Public members
-	/* Get the UNIMARC URL for a given single result page. */
+	// Get the UNIMARC URL for a given single result page.
 	this.reformURL = function (url) {
 		url = url.replace(/(^.*\/ark:\/12148\/cb[0-9]+[a-z]*)(.*$)/, "$1.unimarc");
 		// Zotero.debug("URL1 "+ url);
 		return url;
 	};
-	/* Get the results table from a list page, if any. Looks for // table[@class="ListeNotice"]. */
+	// Get the results table from a list page, if any. Looks for // table[@class="ListeNotice"].
 	this.getResultsTable = function (doc) {
 		try {
 			var xPathObject = ZU.xpath(doc, '// div[@class="liste-notices"]');
@@ -463,10 +463,9 @@ var BnfClass = function () {
 		}
 		return undefined;
 	};
-	/* Get selectable search items from a list page.
-		Loops through //td[@class="mn_partienoticesynthetique"], extracting the single items URLs from
-		their onclick attribute, thier titles by assembling the spans for each cell.
-	*/
+	// Get selectable search items from a list page.
+	// Loops through //td[@class="mn_partienoticesynthetique"], extracting the single items URLs from
+	// their onclick attribute, thier titles by assembling the spans for each cell.
 	this.getSelectedItems = function (doc) {
 		var items = {};
 		var found = false;
@@ -499,22 +498,19 @@ var BnfClass = function () {
 		}
 	}
 
-	/* Process UNIMARC URL. */
+	// Process UNIMARC URL.
 	this.processMarcUrl = function (newDoc, url) {
-		/* Init MARC record. */
+		// Init MARC record.
 		// Load MARC
 		var translator = Zotero.loadTranslator("import");
 		translator.setTranslator("a6ee60df-1ddc-4aae-bb25-45e0537be973");
 		translator.getTranslatorObject(function (obj) {
 			var record = new obj.record();
-			
-			/* Get table cell containing MARC code. */
+			// Get table cell containing MARC code.
 			var elmts = ZU.xpath(newDoc, '//div[@class="notice-detail"]/div/div[@class="zone"]');
-				
-			/* Line loop. */
+			// Line loop.
 			var elmt, tag, content;
 			var ind = "";
-
 			for (var i = 0; i < elmts.length; i++) {
 				elmt = elmts[i];
 				var line = Zotero.Utilities.superCleanString(elmt.textContent);
@@ -550,13 +546,10 @@ var BnfClass = function () {
 			// Create item
 			var newItem = new Zotero.Item();
 			record.translate(newItem);
-
 			// Do specific Unimarc postprocessing
 			postprocessMarc(record, newItem);
-
 			// Check for Gallica URL
 			checkGallica(record, newItem);
-
 			// We have to restore the public view for the next actions
 			// by the users, which is achieved by opening the url with
 			// public ending again.
@@ -612,20 +605,19 @@ function detectWeb(doc, url) {
 }
 
 function doWeb(doc, url) {
-	/* Check type. */
+	// Check type.
 	var type = detectWeb(doc, url);
 	Zotero.debug("type " + type);
 	if (!type) {
 		return;
 	}
-	
-	/* Build array of MARC URLs. */
+	// Build array of MARC URLs.
 	var urls = [];
 	switch (type) {
 		case "multiple":
 			var items = Bnf.getSelectedItems(doc);
 			if (items) {
-				/* Let user select items. */
+				// Let user select items
 				Zotero.selectItems(items, function (items) {
 					for (var i in items) {
 						urls.push(Bnf.reformURL(i));
