@@ -9,7 +9,7 @@
 	"inRepository": true,
 	"translatorType": 4,
 	"browserSupport": "gc",
-	"lastUpdated": "2019-12-12 00:10:04"
+	"lastUpdated": "2019-12-12 10:07:44"
 }
 
 /*
@@ -43,6 +43,8 @@ var BnfClass = function () {
 	*/
 	
 	function getCreatorType(aut) {
+		// To avoid an error on certain pages where the item is not well catalogued
+		if (typeof aut['4'] === 'undefined') return undefined;
 		var typeAut = aut['4'].trim();
 		switch (typeAut) {
 			case "005":
@@ -849,6 +851,32 @@ var testCases = [
 		"type": "web",
 		"url": "https://catalogue.bnf.fr/rechercher.do?motRecherche=test&critereRecherche=0&depart=0&facetteModifiee=ok",
 		"items": "multiple"
+	},
+	{
+		"type": "web",
+		"url": "https://catalogue.bnf.fr/ark:/12148/cb410374690.public",
+		"items": [
+			{
+				"itemType": "artwork",
+				"title": "Les sorcières envahissent la forêt Lespinasse :  [affiche",
+				"creators": [],
+				"date": "2007",
+				"extra": "60 x 40 cm.",
+				"language": "fre",
+				"libraryCatalog": "BnF Catalogue général (http:// catalogue.bnf.fr)",
+				"shortTitle": "Les sorcières envahissent la forêt Lespinasse",
+				"attachments": [
+					{
+						"title": "Lien vers la notice du catalogue",
+						"mimeType": "text/html",
+						"snapshot": false
+					}
+				],
+				"tags": [],
+				"notes": [],
+				"seeAlso": []
+			}
+		]
 	}
 ]
 /** END TEST CASES **/
