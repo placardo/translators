@@ -8,8 +8,8 @@
 	"priority": 100,
 	"inRepository": true,
 	"translatorType": 4,
-	"browserSupport": "gc",
-	"lastUpdated": "2019-12-12 10:07:44"
+	"browserSupport": "g",
+	"lastUpdated": "2019-12-16 19:54:06"
 }
 
 /*
@@ -44,7 +44,7 @@ var BnfClass = function () {
 	
 	function getCreatorType(aut) {
 		// To avoid an error on certain pages where the item is not well catalogued
-		if (typeof aut['4'] === 'undefined') return undefined;
+		if (aut['4'] === undefined) return undefined;
 		var typeAut = aut['4'].trim();
 		switch (typeAut) {
 			case "005":
